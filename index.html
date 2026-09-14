@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Teman Jujurmu</title>
+<meta name="theme-color" content="#12181B">
+<meta name="description" content="Teman curhat soal percintaan dan pertemanan yang jujur, bukan basa-basi.">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Teman Jujurmu">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#12181B;
+    --surface:#1A2226;
+    --surface-2:#202A2F;
+    --ai-bubble:#232D31;
+    --ai-text:#EDE6D8;
+    --user-bubble:#D98A3D;
+    --user-text:#1A1206;
+    --accent:#D98A3D;
+    --sage:#7C9885;
+    --divider:#2A3438;
+    --text-secondary:#8FA0A3;
+    --text-muted:#5D6C6F;
+    --danger:#D96A5A;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{height:100%;}
+  body{
+    background:var(--bg);
+    color:var(--ai-text);
+    font-family:'Inter',system-ui,-apple-system,sans-serif;
+    display:flex;
+    justify-content:center;
+    overflow:hidden;
+  }
+  .app{
+    width:100%;
+    max-width:480px;
+    height:100vh;
+    display:flex;
+    flex-direction:column;
+    background:var(--surface);
+  }
+  header{
+    padding:18px 20px 14px;
+    border-bottom:0.5px solid var(--divider);
+    flex-shrink:0;
+  }
+  .brand-row{
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+  }
+  .brand{
+    font-family:'Fraunces',serif;
+    font-size:21px;
+    font-weight:500;
+    letter-spacing:-0.01em;
+    color:var(--ai-text);
+  }
+  .dot{
+    width:7px;height:7px;border-radius:50%;
+    background:var(--sage);
+    flex-shrink:0;
+  }
+  .tagline{
+    font-size:12.5px;
+    color:var(--text-secondary);
+    margin-top:3px;
+  }
+  .disclaimer{
+    font-size:11px;
+    color:var(--text-muted);
+    margin-top:8px;
+    line-height:1.5;
+    border-left:2px solid var(--divider);
+    padding-left:8px;
+  }
+  .messages{
+    flex:1;
+    overflow-y:auto;
+    padding:20px 16px;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+  }
+  .messages::-webkit-scrollbar{width:4px;}
+  .messages::-webkit-scrollbar-thumb{background:var(--divider);border-radius:2px;}
+  .row{display:flex;}
+  .row.user{justify-content:flex-end;}
+  .row.ai{justify-content:flex-start;}
+  .bubble{
+    max-width:84%;
+    padding:11px 14px;
+    border-radius:16px;
+    font-size:14.5px;
+    line-height:1.6;
+    white-space:pre-wrap;
+  }
+  .row.user .bubble{
+    background:var(--user-bubble);
+    color:var(--user-text);
+    border-bottom-right-radius:4px;
+  }
+  .row.ai .bubble{
+    background:var(--ai-bubble);
+    color:var(--ai-text);
+    border-bottom-left-radius:4px;
+  }
+  .intro-bubble{
+    background:var(--ai-bubble);
+    border-radius:16px;
+    border-bottom-left-radius:4px;
+    padding:13px 14px;
+    font-size:14.5px;
+    line-height:1.6;
+    max-width:88%;
+    color:var(--ai-text);
+  }
+  .intro-bubble b{color:var(--accent);font-weight:600;}
+  .typing{
+    display:flex;
+    gap:4px;
+    padding:14px 16px;
+    background:var(--ai-bubble);
+    border-radius:16px;
+    border-bottom-left-radius:4px;
+    width:fit-content;
+  }
+  .typing span{
+    width:6px;height:6px;border-radius:50%;
+    background:var(--text-secondary);
+    animation:blink 1.2s infinite ease-in-out;
+  }
+  .typing span:nth-child(2){animation-delay:0.2s;}
+  .typing span:nth-child(3){animation-delay:0.4s;}
+  @keyframes blink{0%,80%,100%{opacity:0.25;}40%{opacity:1;}}
+  .error-note{
+    font-size:12.5px;
+    color:var(--danger);
+    background:rgba(217,106,90,0.1);
+    border:0.5px solid rgba(217,106,90,0.3);
+    padding:10px 12px;
+    border-radius:10px;
+  }
+  footer{
+    padding:12px 14px 16px;
+    border-top:0.5px solid var(--divider);
+    flex-shrink:0;
+  }
+  .input-row{
+    display:flex;
+    align-items:flex-end;
+    gap:8px;
+    background:var(--surface-2);
+    border:0.5px solid var(--divider);
+    border-radius:20px;
+    padding:6px 6px 6px 16px;
+  }
+  textarea{
+    flex:1;
+    background:transparent;
+    border:none;
+    outline:none;
+    resize:none;
+    color:var(--ai-text);
+    font-family:'Inter',sans-serif;
+    font-size:14.5px;
+    line-height:1.5;
+    max-height:110px;
+    padding:8px 0;
+  }
+  textarea::placeholder{color:var(--text-muted);}
+  button.send{
+    width:34px;height:34px;
+    border-radius:50%;
+    border:none;
+    background:var(--accent);
+    color:#1A1206;
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;
+    flex-shrink:0;
+    transition:opacity 0.15s, transform 0.1s;
+  }
+  button.send:disabled{opacity:0.35;cursor:default;}
+  button.send:active:not(:disabled){transform:scale(0.92);}
+  .footnote{
+    text-align:center;
+    font-size:10.5px;
+    color:var(--text-muted);
+    margin-top:8px;
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="brand-row">
+      <span class="dot"></span>
+      <span class="brand">teman jujurmu</span>
+    </div>
+    <div class="tagline">bukan yang manis-manis, yang jujur.</div>
+    <div class="disclaimer">
+      Ini AI, bukan psikolog beneran. Buat masalah berat — kekerasan, mau nyakitin diri, krisis — cari bantuan manusia langsung, ya. Dan jangan telan semua kata-kata di sini mentah-mentah, tetap pakai penilaian kamu sendiri.
+    </div>
+  </header>
+
+  <div class="messages" id="messages">
+    <div class="row ai">
+      <div class="intro-bubble">
+        Gas, cerita aja lagi ada masalah apa. Soal gebetan, temen yang toxic, overthinking sebelum bilang perasaan, apa aja.<br><br>
+        Fair warning: kalau emang kamu yang salah langkah, bakal aku bilang <b>terus terang</b> — bukan buat nge-judge, tapi biar kamu nggak muter-muter di masalah yang sama.
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="input-row">
+      <textarea id="input" rows="1" placeholder="Cerita apa yang lagi kejadian..."></textarea>
+      <button class="send" id="sendBtn" aria-label="Kirim">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
+      </button>
+    </div>
+    <div class="footnote">teman jujurmu bisa salah — cek lagi hal-hal penting.</div>
+  </footer>
+</div>
+
+<script>
+const SYSTEM_PROMPT = `Kamu adalah "Teman Jujurmu", teman ngobrol dan tempat curhat buat anak muda soal percintaan dan pertemanan. Kamu bukan psikolog berlisensi — kamu teman yang cerdas dan berani jujur.
+
+ATURAN UTAMA:
+1. Validasi emosi, bukan kesalahan. Sambut perasaan pengguna dengan empati, tapi jangan pernah membenarkan tindakan yang manipulatif, merugikan diri sendiri, atau merugikan orang lain.
+2. Hindari basa-basi kosong. JANGAN pakai kalimat generik kayak "semangat ya", "pasti ada jalan kok", "kamu berhak bahagia". Kalau pengguna salah langkah, overthinking, egois tanpa sadar, atau bertahan di hubungan yang toxic — katakan itu jelas, objektif, dan sopan. Tough love, bukan sekadar nge-hibur.
+3. Jangan terlalu memuji. Jangan bikin pengguna selalu merasa benar atau jadi korban kalau faktanya nggak gitu. Kalau dia yang salah atau nggak bertanggung jawab, bilang itu tanggung jawabnya.
+4. Jangan diagnosis kondisi psikologis siapapun. Fokus ke analisis masalah dan pola perilaku yang bisa diamati dari cerita, bukan label klinis (jangan bilang "kamu anxious attachment" dsb kecuali pengguna sendiri yang sebut duluan).
+5. Gunakan cara pikir psikologi hubungan (boundaries, pola kelekatan, komunikasi asertif, manajemen ekspektasi) tapi jelasin pakai bahasa sehari-hari, bukan istilah akademis kaku.
+6. Gaya bahasa: santai, hangat, lugas, ala ngobrol sama sahabat cerdas yang berani jujur demi kebaikan pengguna. Bahasa Indonesia gaul natural, jangan dibuat-buat.
+7. Struktur jawaban: (a) tanggapi & petakan masalah emosionalnya singkat, (b) bedah situasi secara objektif — termasuk sudut pandang pihak lain yang mungkin nggak disadari pengguna, (c) tutup dengan satu saran konkret ATAU satu pertanyaan reflektif yang bikin pengguna mikir dewasa soal langkah berikutnya. Jangan dua-duanya sekaligus di akhir, pilih satu.
+8. PENTING — batas keselamatan: kalau ada tanda-tanda pengguna dalam krisis, kepikiran nyakitin diri sendiri, atau situasi kekerasan/abuse (baik dialami atau dilakukan), prioritaskan keselamatan dulu. Jangan lanjut "tough love" analisis seperti biasa — validasi, dorong dia cari bantuan manusia/profesional langsung (hotline, orang terdekat yang bisa dipercaya, layanan darurat), dan jangan beri detail teknis apapun yang berisiko.
+9. Jangan pernah menyebut dirimu sebagai pengganti terapis atau profesional. Kalau masalahnya berat, dorong cari bantuan manusia langsung.
+10. Jawaban jangan kepanjangan — cukup 3-5 paragraf pendek, natural kayak chat, bukan esai.`;
+
+const messagesEl = document.getElementById('messages');
+const input = document.getElementById('input');
+const sendBtn = document.getElementById('sendBtn');
+const STORAGE_KEY = 'teman-jujurmu-history';
+let history = [];
+let isLoading = false;
+
+function loadHistory(){
+  try{
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if(!saved) return;
+    const parsed = JSON.parse(saved);
+    if(!Array.isArray(parsed)) return;
+    history = parsed;
+    const introRow = messagesEl.firstElementChild;
+    messagesEl.innerHTML = '';
+    if(history.length === 0 && introRow) messagesEl.appendChild(introRow);
+    history.forEach(m => addBubble(m.role === 'user' ? 'user' : 'ai', m.content));
+  } catch(e){
+    // riwayat rusak, mulai bersih aja
+  }
+}
+
+function saveHistory(){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(history)); }
+  catch(e){ /* storage penuh atau diblokir, lanjut tanpa simpan */ }
+}
+
+if('serviceWorker' in navigator){
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  });
+}
+
+function autoGrow(){
+  input.style.height = 'auto';
+  input.style.height = Math.min(input.scrollHeight, 110) + 'px';
+}
+input.addEventListener('input', autoGrow);
+
+function scrollToBottom(){
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+
+function addBubble(role, text){
+  const row = document.createElement('div');
+  row.className = 'row ' + (role === 'user' ? 'user' : 'ai');
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble';
+  bubble.textContent = text;
+  row.appendChild(bubble);
+  messagesEl.appendChild(row);
+  scrollToBottom();
+  return bubble;
+}
+
+function addTyping(){
+  const row = document.createElement('div');
+  row.className = 'row ai';
+  row.id = 'typingRow';
+  row.innerHTML = '<div class="typing"><span></span><span></span><span></span></div>';
+  messagesEl.appendChild(row);
+  scrollToBottom();
+}
+
+function removeTyping(){
+  const el = document.getElementById('typingRow');
+  if(el) el.remove();
+}
+
+function addErrorNote(){
+  const row = document.createElement('div');
+  row.className = 'row ai';
+  row.innerHTML = '<div class="error-note">Waduh, ada gangguan koneksi. Coba kirim lagi ya.</div>';
+  messagesEl.appendChild(row);
+  scrollToBottom();
+}
+
+async function sendMessage(){
+  const text = input.value.trim();
+  if(!text || isLoading) return;
+
+  addBubble('user', text);
+  history.push({role:'user', content: text});
+  saveHistory();
+  input.value = '';
+  autoGrow();
+  isLoading = true;
+  sendBtn.disabled = true;
+  addTyping();
+
+  try{
+    const response = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-6",
+        max_tokens: 1000,
+        system: SYSTEM_PROMPT,
+        messages: history
+      })
+    });
+
+    const data = await response.json();
+    removeTyping();
+
+    if(data && data.content){
+      const textBlock = data.content.find(b => b.type === 'text');
+      const reply = textBlock ? textBlock.text : "Maaf, aku belum bisa jawab itu. Coba diulang?";
+      addBubble('ai', reply);
+      history.push({role:'assistant', content: reply});
+      saveHistory();
+    } else {
+      addErrorNote();
+    }
+  } catch(err){
+    removeTyping();
+    addErrorNote();
+  } finally {
+    isLoading = false;
+    sendBtn.disabled = false;
+    input.focus();
+  }
+}
+
+sendBtn.addEventListener('click', sendMessage);
+input.addEventListener('keydown', (e) => {
+  if(e.key === 'Enter' && !e.shiftKey){
+    e.preventDefault();
+    sendMessage();
+  }
+});
+
+loadHistory();
+autoGrow();
+</script>
+</body>
+</html>
